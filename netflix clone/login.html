@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Netflix</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .auth-container {
+            max-width: 350px;
+            margin: 80px auto;
+            background: rgba(0,0,0,0.8);
+            padding: 40px;
+            border-radius: 5px;
+        }
+        .auth-container h2 {
+            margin-bottom: 20px;
+        }
+        .auth-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0;
+            background: #333;
+            border: none;
+            color: white;
+            border-radius: 4px;
+        }
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            background: #e50914;
+            border: none;
+            color: white;
+            margin-top: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .link a {
+            color: #e50914;
+            text-decoration: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="auth-container">
+        <h2>Sign In</h2>
+
+        <input id="email" type="email" placeholder="Email Address">
+        <input id="password" type="password" placeholder="Password">
+
+        <button class="auth-btn" onclick="login()">Sign In</button>
+
+        <div class="link">
+            New to Netflix?
+            <a href="signup.html">Create an account</a>
+        </div>
+    </div>
+
+    <script>
+        const BACKEND_URL = "https://netflix-fullstack-7jqz.onrender.com";
+
+        async function login() {
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            const res = await fetch(`${BACKEND_URL}/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await res.json();
+            alert(data.message);
+
+            if (data.success) {
+                // Redirect to home page
+                window.location.href = "index.html";
+            }
+        }
+    </script>
+
+</body>
+</html>

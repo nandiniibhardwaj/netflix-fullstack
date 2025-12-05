@@ -5,15 +5,30 @@ import cors from "cors";
 
 const app = express();
 app.use(express.json());
-app.use(cors());
 
-// Load users from JSON
+// --- FIX: Allow your Vercel frontend ---
+app.use(
+  cors({
+    origin: "https://netflixclone-six-gamma.vercel.app", // your frontend URL
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
+
+// --- FIX: Users file safe load ---
 const loadUsers = () => {
-  const data = fs.readFileSync("users.json");
-  return JSON.parse(data);
+  try {
+    if (!fs.existsSync("users.json")) {
+      fs.writeFileSync("users.json", "[]");
+    }
+    const data = fs.readFileSync("users.json");
+    return JSON.parse(data);
+  } catch (error) {
+    return [];
+  }
 };
 
-// Save users to JSON
+// Save users
 const saveUsers = (users) => {
   fs.writeFileSync("users.json", JSON.stringify(users, null, 2));
 };
@@ -56,5 +71,6 @@ app.post("/login", async (req, res) => {
   res.json({ success: true, message: "Login successful" });
 });
 
-// ---------------- START SERVER ---------------- //
-app.listen(5000, () => console.log("Backend running on port 5000"));
+// --------------- RENDER PORT FIX ---------------- //
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Backend running on ${PORT}`));
